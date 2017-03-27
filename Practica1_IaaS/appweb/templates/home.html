@@ -1,0 +1,47 @@
+{% extends "layout.html" %} {% block navbar %}
+<ul class="navbar-nav  mr-auto">
+    <li class="nav-item active">
+        <a class="nav-link" href="/restaurantes">Listar <span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/restaurantes/aniadir">Añadir</a>
+    </li>
+
+</ul>
+<form class="form-inline my-2 my-lg-0" method="get"
+    action="{% url 'buscar' %}">
+     <input class="form-control mr-sm-2" type="text" placeholder="Tipo de cocina" name="cocina">
+     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+   </form>
+</ul>
+{% endblock %} {% block content %}
+<div class="starter-template">
+    {% block header %}
+    <h3>Últimos restuarantes añadidos</h3>
+
+    {% endblock %}
+    <br />
+    <table class="table table-striped">
+      <thead class="thead-inverse" style="text-align: center;">
+        <tr>
+          <th>Nombre</th>
+          <th>Cocina</th>
+          <th>Dirección</th>
+          <th>Barrio</th>
+        </tr>
+      </thead>
+      <tbody>
+          {% for r in resta %}
+          <tr>
+            <td>{{r.name}}</td>
+            <td>{{r.cuisine}}</td>
+            <td>{{r.address.street}}</td>
+            <td>{{r.borough}}</td>
+          </tr>
+
+          {% endfor %}
+
+      </tbody>
+    </table>
+</div>
+{% endblock %}
