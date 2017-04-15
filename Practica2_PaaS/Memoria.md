@@ -288,7 +288,7 @@ Una vez construida la imagen se puede instanciar con
 docker run -d --name mongo_aythae mongo_aythae_img
 ```
 
-Tras esto como ya he comentado habrá que ejecutar el script `final_set_up.sh` como ya he comentado, esto se puede llevar a cabo con el comando
+Tras esto habrá que ejecutar el script `final_set_up.sh` como ya he comentado, esto se puede llevar a cabo con el comando
 ```
 docker exec -it mongo_aythae /bin/sh ./final_set_up.sh
 ```
