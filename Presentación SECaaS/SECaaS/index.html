@@ -1,0 +1,279 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>SECaaS</title>
+
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/moon.css">
+
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/zenburn.css">
+
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName('head')[0].appendChild(link);
+	</script>
+
+	<style>
+		.alineación_izquierda {
+			text-align: left;
+		}
+
+		.reveal li {
+			font-size: smaller;
+		}
+
+		.reveal figcaption {
+			font-size: small;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section>
+				<h2>SECaaS: Security as a Service</h2>
+				<h4>Cloud Computing: Servicios y Aplicaciones</h3>
+				<h4>Curso 2016/2017</h3>
+			</section>
+			<section>
+				<h3>Índice</h3>
+				<ul>
+
+					<li>Definición</li>
+					<li>Servicios ofrecidos</li>
+					<li>Ventajas y riesgos</li>
+					<li>Principales desafíos</li>
+					<li>Proveedores de SECaaS</li>
+					<li>Casos destacados</li>
+					<li>Referencias</li>
+				</ul>
+			</section>
+			<section>
+				<h3>Definición</h3>
+				<b>SECaaS</b> es un modelo de Cloud Computing basado en SaaS y especializado en dar servicios de seguridad informática a traves de internet.
+
+			</section>
+
+			<section>
+				<section>
+
+					<h3>Servicios ofrecidos (I)</h3>
+					<div class="alineación_izquierda">
+						<p>
+							Segun la CSA (Cloud Service Alliance) existen las siguientes categorias de servicios:
+						</p>
+					</div>
+					<div class="enumeracion">
+
+					<ul>
+						<li><b>Gestión de identidades y accesos (IAM)</b>: firma electrónica, web-SSO (Single Sign-on), gestión y provisión de tokens de autenticación...</li>
+						<li><b>Prevención de perdida de datos (DLP)</b>: encriptación de datos transparente, gestión de políticas de acceso...</li>
+						<li><b>Seguridad web</b>: filtrado web, anti-virus, monitorización web, anti-phishing, análisis de vulnerabilidades web...</li>
+						<li><b>Seguridad de correo electrónico</b>: filtros de spam, encriptación de emails, escaneo de los contenidos...</li>
+					</ul>
+
+					</div>
+
+				</section>
+				<section>
+					<h3>Servicios ofrecidos (II)</h3>
+					<ul>
+
+						<li><b>Evaluación de la seguridad:</b> auditorias de servicios cloud basadas en estanards, tests de penetración, valoración de riesgos de seguridad...</li>
+						<li><b>Gestión de intrusiones</b>: usando patrones de reconocimiento para detectar y reaccionar a eventos inusuales, sistemas en tiempo real para detectar o preveer una intrusión, inspección de paquetes...</li>
+						<li><b>Gestión de información de seguridad y eventos (SIEM)</b>: Análisis de logs con sistemas en tiempo real para la creación de informes y alerta ante indicendes de seguridad</li>
+					</ul>
+				</section>
+				<section>
+					<h3>Servicios ofrecidos (III)</h3>
+					<ul>
+
+						<li><b>Encriptación</b>: VPN, encripcación de comunicaciones, firmas digitales, integridad y validación de mensajes...</li>
+						<li><b>Continuidad de negocio y recuperación ante desastres</b>: medidas diseñadas para asegurar que el servicio se mantenga en caso de fallos, cloud backup, data center alternativo, replicación de datos...</li>
+						<li><b>Seguridad de redes</b>: firewall, proteccion DDoS, integración con los hiper visores...</li>
+					</ul>
+				</section>
+			</section>
+			<section>
+				<section>
+					<h3>Ventajas y riesgos (I)</h3>
+					<div class="alineación_izquierda">
+						Como todo servicio cloud estos servicios presentan unas ventajas sobre su equivalente tradicional:
+						<ul>
+							<li><b>Menores costes</b>: al facturarse por tiempo y recursos usados realmente.</li>
+							<li><b>Actualizaciones automaticas de software y definiciones de virus</b>: ya que son realizadas por proveedor y llegan automaticamente a todos los clientes, algo muy importante en el mundo de la seguridad.</li>
+							<li><b>Delegación de la seguridad</b>: lo que permite a las empresas centrarse en ofrecer sus productos.</li>
+						</ul>
+					</div>
+				</section>
+				<section>
+					<h3>Ventajas y riesgos (II)</h3>
+					<div class="alineación_izquierda">
+						A pesar de estas atractivas ventajas el uso de estos servicios tambien conlleva sus riesgos
+						<ul>
+							<li><b>Efecto dominó</b>: en caso de que se descubra una vulnerabilidad en un servicio esto puede llevar a un efecto dominó debido a la amplia escala de los entornos cloud.</li>
+							<li><b>Naturaleza compartida</b>: existen muchos clientes que quieren soluciones personalizadas y esto no es habitual en servicios SaaS.</li>
+							<li><b>Soluciones generales</b>: el usar soluciones centralizadas reduce la capacidad de los clientes de personalizar estas y puede forzar a los clientes a adaptarse para adecuarse a sus servicios SECaaS.</li>
+						</ul>
+					</div>
+				</section>
+			</section>
+			<section>
+				<h3>Principales desafíos</h3>
+
+					<p>Crear un framework o estandar internacionalmente aceptado que incluya unas especificaciones mínimas.</p>
+					<p>Mantener una reputación de mayor fiabilidad respecto a las soluciones estandar no cloud.</p>
+
+
+			</section>
+			<section>
+				<section>
+					<h3>Proveedores de SECaaS (I)</h3>
+					<img src="imgs/palerra.png" alt="Palerra logo" style="width: 250px; height: auto; float: left; margin-right: 20px;">
+					<div class="alineación_izquierda">
+						<p><b>Palerra</b>: Empresa conocida por ofrecer software de tipo cloud access security brokerage, suites integradas de seguridad en el entorno SECaaS. </p>
+
+						<p>
+							Su solución permite la detección de intrusos, el análisis predictivo, gestión de la configuración y respuesa a incidentes. Está integrada en numerosos servicios de nube como AWS, Salesforce o Github.
+						</p>
+					</div>
+				</section>
+
+				<section>
+					<img src="imgs/palerra-screenshot1.png" alt="" >
+				</section>
+				<section>
+					<h3>Proveedores de SECaaS (II)</h3>
+					<img src="imgs/Okta_Logo_BrightBlue_Medium.png" alt="Okta logo" style="width: 250px; height: auto; float: left; margin-right: 20px;">
+					<div class="alineación_izquierda">
+						<p><b>Okta</b>: Se centra en la gestión de identidad y acceso (IAM), destaca su producto Single Sign-on que permite a sus usuarios acceder a todas sus aplicaciones cloud o web con solo unos credendenciales de usuario. Además de esto permite la integración con AD/LDAP (directorios remotos).</p>
+
+						<p>
+							Su precio es de 2 $ al mes por usuario.
+						</p>
+					</div>
+				</section>
+				<section>
+					<img src="imgs/sf_sso_1_lrg.png" alt="" >
+				</section>
+				<section>
+					<h3>Proveedores de SECaaS (III)</h3>
+					<img src="imgs/content.php.jpeg" alt="Proofpoint logo" style="width: 250px; height: auto; float: left; margin-right: 20px;">
+					<div class="alineación_izquierda">
+						<p><b>Proofpoint</b>: Basa su negocio en ofrecer proteccion email, afirman proteger contra malware, spam o phishing. En su SLA garantizan bloquear el 99,999% del spam y el 100% de la detección de malware. Utilizan detección basadas en firmas.</p>
+
+						<p>
+							Su software permite la creación de informes, politicas personalizadas, grupos de usuarios, seguridad en redes sociales...
+						</p>
+					</div>
+
+				</section>
+				<section>
+					<img src="imgs/proofpoint-screenshot.jpg" alt="" >
+				</section>
+				<section>
+					<h3>Proveedores de SECaaS (IV)</h3>
+					<img src="imgs/AAEAAQAAAAAAAAQVAAAAJDE4YzI0ZjZiLWE4MzMtNGZjMC05NTRkLWVjMGNmYWExMjRlOA.png" alt="WhiteHat Security logo" style="width: 250px; height: auto; float: left; margin-right: 20px;">
+					<div class="alineación_izquierda">
+						<p><b>WhiteHat Security</b>: Esta empresa se centra en la seguridad web y de aplicación, ofrecen servicios SaaS para realizar test de seguridad dinámicos o estáticos.</p>
+
+						<p>
+							Además ofrecen consultoría personalizada para ayudar a resolver las vulnerabilidades encontradas con su herramienta.
+						</p>
+					</div>
+
+					</section>
+				<section>
+					<img src="imgs/sentinel-overview-screenshot-1.png" alt="" >
+				</section>
+				<section>
+					<h3>Proveedores de SECaaS (V)</h3>
+					<img src="imgs/qualys.jpg" alt="Qualys logo" style="width: 250px; height: auto; float: left; margin-right: 20px;">
+					<div class="alineación_izquierda">
+						<p><b>Qualys</b>: este proveedor ofrece una suite integrada para la seguridad de redes. Respecto a las areas funcionales permite la monitorización continua, gestión de vulnerabilidades, escaneo web, firewall software para aplicaciones web, escaneo y monitoreo de dispositivos conectados...</p>
+
+						<p>
+							Para llevar a cabo estas funciones se sirve de sensores fisicos y agentes ligeros.
+						</p>
+					</div>
+
+					</section>
+				<section>
+					<img src="imgs/cm-screenshot-636-2x.jpg" alt="" >
+				</section>
+			</section>
+
+			<section>
+				<h3>Casos destacados</h3>
+			</section>
+			<section>
+				<h3>Referencias</h3>
+				<ul>
+					<li><a href="https://www.techopedia.com/definition/26746/security-as-a-service-secaas-saas" target="_blank">Techopedia, Security as a Service (SecaaS or SaaS)</a></li>
+					<li><a href="http://blog.svtcloud.com/secaas-o-seguridad-como-servicio-no-solo-para-las-grandes-empresas/" target="_blank">SVT Cloud, SECaaS o Seguridad como Servicio: no solo para las grandes empresas</a></li>
+					<li><a href="https://downloads.cloudsecurityalliance.org/initiatives/secaas/SecaaS_V1_0.pdf" target="_blank">CSA (Cloud Security Alliance) (2011), Defined Categories of Service</a></li>
+					<li><a href="http://technologyadvice.com/blog/information-technology/top-5-security-as-a-service-providers/" target="_blank">Aleks Peterson (2016), Top 5 Security-as-a-Service Providers</a></li>
+					<li><a href="https://www.tripwire.com/state-of-security/security-data-protection/cyber-security/a-three-pronged-strategy-to-help-organizations-defend-against-ransomware-attacks/" target="_blank">Tripwire (2016), 3 Reasons Why Your Organization Should Consider Security as a Service (SECaaS)</a></li>
+					<li><a href="https://ccskguide.org/security-as-a-service-secaas-2/" target="_blank">CCSK Guide (2011), Security as a Service (SecaaS)</a></li>
+					<li><a href="https://en.wikipedia.org/wiki/Security_as_a_service#Benefits">Wikipedia (2017), Security as a service</a></li>
+				</ul>
+			</section>
+			<section>
+				<h2>Gracias por vuestra atención</br>¿Alguna pregunta?</h2>
+			</section>
+		</div>
+	</div>
+
+	<script src="lib/js/head.min.js"></script>
+	<script src="js/reveal.js"></script>
+
+	<script>
+		// More info about config & dependencies:
+		// - https://github.com/hakimel/reveal.js#configuration
+		// - https://github.com/hakimel/reveal.js#dependencies
+		Reveal.initialize({
+			dependencies: [{
+					src: 'plugin/markdown/marked.js'
+				},
+				{
+					src: 'plugin/markdown/markdown.js'
+				},
+				{
+					src: 'plugin/notes/notes.js',
+					async: true
+				},
+				{
+					src: 'plugin/highlight/highlight.js',
+					async: true,
+					callback: function() {
+						hljs.initHighlightingOnLoad();
+					}
+				}
+			],
+			slideNumber: true,
+			transition: 'zoom'
+		});
+
+		// Slide number formatting can be configured using these variables:
+		//  "h.v": 	horizontal . vertical slide number (default)
+		//  "h/v": 	horizontal / vertical slide number
+		//    "c": 	flattened slide number
+		//  "c/t": 	flattened slide number / total slides
+		Reveal.configure({
+			slideNumber: 'c/t',
+			pdfMaxPagesPerSlide: 1
+		});
+	</script>
+</body>
+
+</html>
