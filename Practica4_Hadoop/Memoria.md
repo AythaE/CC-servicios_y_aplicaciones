@@ -26,6 +26,10 @@
 <!-- toc -->
 
 - [Enunciado de la práctica](#enunciado-de-la-practica)
+- [Comentarios generales](#comentarios-generales)
+- [Tarea 1: mínimo de la variable 5.](#tarea-1-minimo-de-la-variable-5)
+- [Tarea 2: máximo de la variable 5.](#tarea-2-maximo-de-la-variable-5)
+- [Tarea 3: máximo y mínimo de la variable 5.](#tarea-3-maximo-y-minimo-de-la-variable-5)
 - [Bibliografía](#bibliografia)
 
 <!-- tocstop -->
@@ -134,7 +138,7 @@ public class MaxMinReducer extends MapReduceBase implements Reducer<Text, Double
 	}
 }
 ```
- Para compilar las clases de esta tarea concreta y ejecutarla hay que ejecutar los siguientes comandos
+Para compilar las clases de esta tarea concreta y ejecutarla hay que ejecutar los siguientes comandos
 ```
 cd T3
 mkdir java_classes jars
@@ -150,6 +154,58 @@ hcat P4/T3/output/*
 # Max	9.0
 # Min	-11.0
 ```
+
+## Tarea 4: Calcula los valores máximo y mínimo de todas las variables (salvo la última).
+
+Esta tarea consiste en calcular el máximo y el mínimo de todas las columnas. He partido de la tarea previa cambiando la clase mapper para que utilice como clave el número de la variable.
+```
+public void map(LongWritable key, Text value, OutputCollector<LongWritable, DoubleWritable> output, Reporter reporter) throws IOException {
+                String line = value.toString();
+                String[] parts = line.split(",");
+
+                //i < parts.length -1 to avoid the last element
+                for(int i=0; i< parts.length -1; i++){
+                    output.collect(new LongWritable((long)i), new DoubleWritable(Double.parseDouble(parts[i])));
+                }
+        }
+```
+También he tenido que modificar ligeramente la clase reducer para devolver al output a que variable (clave) corresponde dicho mínimo y máximo.
+
+Para compilar las clases de esta tarea concreta y ejecutarla hay que ejecutar los siguientes comandos
+```
+cd T4
+mkdir java_classes jars
+javac -cp /usr/lib/hadoop/*:/usr/lib/hadoop-mapreduce/* -d java_classes MaxMinAll*
+jar -cvf jars/MaxMinAll.jar -C java_classes / .
+
+# Para lanzar la tarea
+hadoop jar jars/MaxMinAll.jar oldapi.MaxMinAll /tmp/BDCC/datasets/ECBDL14/ECBDL14_10tst.data ./P4/T4/output/
+
+# Para comprobar los resultados
+hcat P4/T4/output/*
+# Salida:
+# Max var 0:	0.768
+# Min var 0:	0.094
+# Max var 1:	0.154
+# Min var 1:	0.0
+# Max var 2:	10.0
+# Min var 2:	-12.0
+# Max var 3:	8.0
+# Min var 3:	-11.0
+# Max var 4:	9.0
+# Min var 4:	-12.0
+# Max var 5:	9.0
+# Min var 5:	-11.0
+# Max var 6:	9.0
+# Min var 6:	-13.0
+# Max var 7:	9.0
+# Min var 7:	-12.0
+# Max var 8:	7.0
+# Min var 8:	-12.0
+# Max var 9:	10.0
+# Min var 9:	-13.0
+```
+
 
 <!-- Salto de página -->
 <div style="page-break-before: always;"></div>
@@ -171,8 +227,8 @@ Apache Hadoop Main 2.6.0 APIs. Consultado en 05/2017, <https://hadoop.apache.org
 
 </p>
 
-<p id="1">
+<p id="3">
 
-[1]: M. Parra (2017), Starting with HDFS. Consultado en 05/2017, <https://github.com/manuparra/MasterDegreeCC_Practice/blob/master/starting_hdfs.md>
+[3]: M. Parra (2017), Starting with HDFS. Consultado en 05/2017, <https://github.com/manuparra/MasterDegreeCC_Practice/blob/master/starting_hdfs.md>
 
 </p>
