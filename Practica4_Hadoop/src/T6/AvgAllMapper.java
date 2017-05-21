@@ -9,7 +9,8 @@ import org.apache.hadoop.mapred.Mapper;
 import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reporter;
 
-public class MaxMinAllMapper extends MapReduceBase implements Mapper<LongWritable, Text, LongWritable, DoubleWritable> {
+public class AvgAllMapper extends MapReduceBase implements Mapper<LongWritable, Text, LongWritable, DoubleWritable> {
+        private static final int MISSING = 9999;
 
 		public void map(LongWritable key, Text value, OutputCollector<LongWritable, DoubleWritable> output, Reporter reporter) throws IOException {
                 String line = value.toString();

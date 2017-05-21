@@ -161,7 +161,9 @@ hcat P4/T3/output/*
 
 Esta tarea consiste en calcular el máximo y el mínimo de todas las columnas. He partido de la tarea previa cambiando la clase mapper para que utilice como clave el número de la variable.
 ```
-public void map(LongWritable key, Text value, OutputCollector<LongWritable, DoubleWritable> output, Reporter reporter) throws IOException {
+public class MaxMinAllMapper extends MapReduceBase implements Mapper<LongWritable, Text, LongWritable, DoubleWritable> {
+
+    public void map(LongWritable key, Text value, OutputCollector<LongWritable, DoubleWritable> output, Reporter reporter) throws IOException {
                 String line = value.toString();
                 String[] parts = line.split(",");
 
@@ -169,7 +171,8 @@ public void map(LongWritable key, Text value, OutputCollector<LongWritable, Doub
                 for(int i=0; i< parts.length -1; i++){
                     output.collect(new LongWritable((long)i), new DoubleWritable(Double.parseDouble(parts[i])));
                 }
-        }
+    }
+}
 ```
 
 También he tenido que modificar ligeramente la clase reducer para devolver al output a que variable (clave) corresponde dicho mínimo y máximo.
@@ -212,7 +215,9 @@ hcat P4/T4/output/*
 ### Tarea 5: Realizar la media de la variable 5.
 Esta tarea consiste en calcular la media de la columna 6. He partido de la tarea 3 cambiando la clase reducer con el objetivo de obtener la media. Dicha ha clase ha quedado de la siguiente manera:
 ```
-public void reduce(Text key, Iterator<DoubleWritable> values, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
+public class AvgReducer extends MapReduceBase implements Reducer<Text, DoubleWritable, Text, DoubleWritable> {
+
+    public void reduce(Text key, Iterator<DoubleWritable> values, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
 		Double sum = 0.0;
 		int numValues = 0;
 
@@ -225,6 +230,7 @@ public void reduce(Text key, Iterator<DoubleWritable> values, OutputCollector<Te
 	output.collect(new Text("Avg"), new DoubleWritable(sum/numValues));
 
 	}
+}
 ```
 
 Para compilar las clases de esta tarea concreta y ejecutarla hay que ejecutar los siguientes comandos
@@ -243,7 +249,58 @@ hcat P4/T5/output/*
 # Avg	-1.282261707288373
 ```
 
+### Tarea 6: Obtener la media de todas las variables (salvo la clase).
+Esta tarea consiste en calcular la media de todas las columnas. He partido de las 2 tareas previas dejando la clase mapper como en la tarea 4 y modificando la clase reducer para el cálculo de la media en lugar del máximo y el mínimo. Esta clase ha quedado de la siguiente manera:
+```
+public class AvgAllReducer extends MapReduceBase implements Reducer<LongWritable, DoubleWritable, Text, DoubleWritable> {
 
+
+	private static final int NUM_VARS = 10;
+	public void reduce(LongWritable key, Iterator<DoubleWritable> values, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
+		Double sum = 0.0;
+		int numValues = 0;
+
+		while (values.hasNext()) {
+			Double v = values.next().get();
+			sum += v;
+			numValues++;
+
+		}
+		output.collect(new Text("Avg var "+key+":"), new DoubleWritable(sum/numValues));
+	}
+}
+```
+
+Para compilar las clases de esta tarea concreta y ejecutarla hay que ejecutar los siguientes comandos
+```
+cd T6
+mkdir java_classes jars
+javac -cp /usr/lib/hadoop/*:/usr/lib/hadoop-mapreduce/* -d java_classes AvgAll*
+jar -cvf jars/AvgAll.jar -C java_classes / .
+
+# Para lanzar la tarea
+hadoop jar jars/AvgAll.jar oldapi.AvgAll /tmp/BDCC/datasets/ECBDL14/ECBDL14_10tst.data ./P4/T6/output/
+
+# Para comprobar los resultados
+hcat P4/T6/output/*
+# Salida:
+# Avg var 0:	0.2549619599194048
+# Avg var 1:	0.05212776590927781
+# Avg var 2:	-2.188240380935686
+# Avg var 3:	-1.408876789776933
+# Avg var 4:	-1.7528724942777865
+# Avg var 5:	-1.282261707288373
+# Avg var 6:	-2.293434905140485
+# Avg var 7:	-1.5875789403216172
+# Avg var 8:	-1.7390052924221087
+# Avg var 9:	-1.6989002790625127
+```
+
+### Tarea 7: Comprobar si el conjunto de datos ECBDL es balanceado.
+
+### Tarea 8. Cálculo del coeficiente de correlación entre todas las parejas de variables.
+
+### Tareas adicionales
 <!-- Salto de página -->
 <div style="page-break-before: always;"></div>
 
