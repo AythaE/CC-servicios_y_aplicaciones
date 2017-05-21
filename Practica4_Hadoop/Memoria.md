@@ -297,6 +297,49 @@ hcat P4/T6/output/*
 ```
 
 ### Tarea 7: Comprobar si el conjunto de datos ECBDL es balanceado.
+Esta tarea consiste en calcular el ratio de miembros de una clase u otra utilizando para ello la columna 11. He partido de la tarea 5 cambiando el mapper para que coja los valores de la columna 11 y la clase reducer para contar los miembros de una u otra clase, acto seguido devuelvo el ratio como se puede observar:
+```
+public class BalReducer extends MapReduceBase implements Reducer<IntWritable, IntWritable, Text, DoubleWritable> {
+
+
+    public void reduce(IntWritable key, Iterator<IntWritable> values, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
+        long numC0 = 0, numC1 = 0;
+
+        while (values.hasNext()) {
+            Integer v = values.next().get();
+
+            if (v == 0) {
+                numC0++;
+            } else {
+                numC1++;
+            }
+
+        }
+
+
+        output.collect(new Text("Ratio:"), new DoubleWritable(((double) Math.max(numC0, numC1)) / Math.min(numC0, numC1)));
+
+    }
+}
+```
+
+Para compilar las clases de esta tarea concreta y ejecutarla hay que ejecutar los siguientes comandos
+```
+cd T7
+mkdir java_classes jars
+javac -cp /usr/lib/hadoop/*:/usr/lib/hadoop-mapreduce/* -d java_classes Bal*
+jar -cvf jars/Bal.jar -C java_classes / .
+
+# Para lanzar la tarea
+hadoop jar jars/Bal.jar oldapi.Bal /tmp/BDCC/datasets/ECBDL14/ECBDL14_10tst.data ./P4/T7/output/
+
+# Para comprobar los resultados
+hcat P4/T7/output/*
+# Salida:
+# Ratio:	58.582560602010815
+```
+
+Como se ha dicho en el enunciado consideramos que un conjunto de datos es no balanceado si su ratio es mayor que 1,5. Como se puede apreciar viendo los resultados nos encontramos ante un conjunto muy desbalanceado, cabe recordar que este dataset es un subconjunto con el 10% de instancias del original.
 
 ### Tarea 8. Cálculo del coeficiente de correlación entre todas las parejas de variables.
 
