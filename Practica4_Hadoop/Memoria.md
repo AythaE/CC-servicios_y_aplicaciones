@@ -27,9 +27,11 @@
 
 - [Enunciado de la práctica](#enunciado-de-la-practica)
 - [Comentarios generales](#comentarios-generales)
-- [Tarea 1: mínimo de la variable 5.](#tarea-1-minimo-de-la-variable-5)
-- [Tarea 2: máximo de la variable 5.](#tarea-2-maximo-de-la-variable-5)
-- [Tarea 3: máximo y mínimo de la variable 5.](#tarea-3-maximo-y-minimo-de-la-variable-5)
+  * [Tarea 1: mínimo de la variable 5.](#tarea-1-minimo-de-la-variable-5)
+  * [Tarea 2: máximo de la variable 5.](#tarea-2-maximo-de-la-variable-5)
+  * [Tarea 3: máximo y mínimo de la variable 5.](#tarea-3-maximo-y-minimo-de-la-variable-5)
+  * [Tarea 4: Calcula los valores máximo y mínimo de todas las variables (salvo la última).](#tarea-4-calcula-los-valores-maximo-y-minimo-de-todas-las-variables-salvo-la-ultima)
+  * [Tarea 5: Realizar la media de la variable 5.](#tarea-5-realizar-la-media-de-la-variable-5)
 - [Bibliografía](#bibliografia)
 
 <!-- tocstop -->
@@ -69,7 +71,7 @@ alias jar="/etc/alternatives/jarc"
 
 También comentar que he comenzado con el ejemplo de [1] que calcula el mínimo de la columna de índice 5 (la sexta), por tanto todas las medidas estadísticas de la columna 5 las he realizado sobre la 6 debido a que mis compañeros han realizado todos sus cálculos sobre dicha columna.
 
-## Tarea 1: mínimo de la variable 5.
+### Tarea 1: mínimo de la variable 5.
 Esta tarea consiste en calcular el mínimo de la columna 6. He partido del ejemplo disponible en `/tmp` con alguna ligera modificación de estilo. Para compilar las clases de esta tarea concreta y ejecutarla hay que ejecutar los siguientes comandos
 ```
 cd T1
@@ -85,7 +87,7 @@ hcat P4/T1/output/*
 # Salida: Min	-11.0
 ```
 
-## Tarea 2: máximo de la variable 5.
+### Tarea 2: máximo de la variable 5.
 Esta tarea consiste en calcular el máximo de la columna 6. He partido de la tarea previa cambiando las apariciones de min por max y modificando en especial la clase reducer con el objetivo de obtener el máximo, dicha clase ha quedado así:
 ```
 public class MaxReducer extends MapReduceBase implements Reducer<Text, DoubleWritable, Text, DoubleWritable> {
@@ -116,7 +118,7 @@ hcat P4/T2/output/*
 # Salida: Max	9.0
 ```
 
-## Tarea 3: máximo y mínimo de la variable 5.
+### Tarea 3: máximo y mínimo de la variable 5.
 Esta tarea consiste en calcular el máximo y el mínimo de la columna 6. He partido de la tarea previa cambiando las apariciones de max por maxmin y modificando en especial la clase reducer con el objetivo de obtener el máximo y el mínimo simultáneamente. Dicha ha clase ha quedado de la siguiente manera:
 ```
 public class MaxMinReducer extends MapReduceBase implements Reducer<Text, DoubleWritable, Text, DoubleWritable> {
@@ -155,7 +157,7 @@ hcat P4/T3/output/*
 # Min	-11.0
 ```
 
-## Tarea 4: Calcula los valores máximo y mínimo de todas las variables (salvo la última).
+### Tarea 4: Calcula los valores máximo y mínimo de todas las variables (salvo la última).
 
 Esta tarea consiste en calcular el máximo y el mínimo de todas las columnas. He partido de la tarea previa cambiando la clase mapper para que utilice como clave el número de la variable.
 ```
@@ -169,6 +171,7 @@ public void map(LongWritable key, Text value, OutputCollector<LongWritable, Doub
                 }
         }
 ```
+
 También he tenido que modificar ligeramente la clase reducer para devolver al output a que variable (clave) corresponde dicho mínimo y máximo.
 
 Para compilar las clases de esta tarea concreta y ejecutarla hay que ejecutar los siguientes comandos
@@ -204,6 +207,40 @@ hcat P4/T4/output/*
 # Min var 8:	-12.0
 # Max var 9:	10.0
 # Min var 9:	-13.0
+```
+
+### Tarea 5: Realizar la media de la variable 5.
+Esta tarea consiste en calcular la media de la columna 6. He partido de la tarea 3 cambiando la clase reducer con el objetivo de obtener la media. Dicha ha clase ha quedado de la siguiente manera:
+```
+public void reduce(Text key, Iterator<DoubleWritable> values, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
+		Double sum = 0.0;
+		int numValues = 0;
+
+		while (values.hasNext()) {
+			Double v = values.next().get();
+			sum += v;
+			numValues++;
+
+		}
+	output.collect(new Text("Avg"), new DoubleWritable(sum/numValues));
+
+	}
+```
+
+Para compilar las clases de esta tarea concreta y ejecutarla hay que ejecutar los siguientes comandos
+```
+cd T5
+mkdir java_classes jars
+javac -cp /usr/lib/hadoop/*:/usr/lib/hadoop-mapreduce/* -d java_classes Avg*
+jar -cvf jars/Avg.jar -C java_classes / .
+
+# Para lanzar la tarea
+hadoop jar jars/Avg.jar oldapi.Avg /tmp/BDCC/datasets/ECBDL14/ECBDL14_10tst.data ./P4/T5/output/
+
+# Para comprobar los resultados
+hcat P4/T5/output/*
+# Salida:
+# Avg	-1.282261707288373
 ```
 
 
