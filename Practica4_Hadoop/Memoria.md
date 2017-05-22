@@ -75,6 +75,10 @@ alias jar="/etc/alternatives/jarc"
 
 También comentar que he comenzado con el ejemplo de [1] que calcula el mínimo de la columna de índice 5 (la sexta), por tanto todas las medidas estadísticas de la columna 5 las he realizado sobre la 6 debido a que mis compañeros han realizado todos sus cálculos sobre dicha columna.
 
+
+<!-- Salto de página -->
+<div style="page-break-before: always;"></div>
+
 ### Tarea 1: mínimo de la variable 5.
 Esta tarea consiste en calcular el mínimo de la columna 6. He partido del ejemplo disponible en `/tmp` con alguna ligera modificación de estilo. Para compilar las clases de esta tarea concreta y ejecutarla hay que ejecutar los siguientes comandos
 ```
@@ -496,6 +500,100 @@ hcat P4/T8/output/*
 ```
 
 ### Tareas adicionales
+En [1] se comentan las siguientes modificaciones y pruebas adicionales a realizar en el código:
+1. Parametrizar la columna sobre la que se quiere calcular el estadístico
+2. Combinar el cálculo de todos los estadísticos en una única función
+3. Calcular los estadísticos sobre todas las columnas
+4. Repite el proceso sobre un conjunto de mayor volumen (Ej: `/user/isaac/datasets/higgs...`” ¿Hay grandes diferencias de tiempo?
+5. Acelera el proceso de cómputo descargando al Reducer de parte de la tarea.
+
+He decidido aplicar varias modificaciones a la vez, ya que no tiene mucho sentido repetir la misma sobre varios cálculos distintos. En el siguiente código realizaré el cálculo de todos los estadísticos (mínimo, media y máximo) de forma parametrizada, con este código por tanto se cumplen las tareas adicionales 1 y 2, también se podria llevar a cabo la 3 si se ejecuta para cada una de las columnas. He partido de la tarea 5 cambiando la clase mapper para recoger la columna, que se pasa como argumento al invocar el `.jar`, utilizando un objeto `JobConf`.
+```
+public class StatMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, DoubleWritable> {
+        private static final int MISSING = 9999;
+
+        private static int col = -1;
+
+        public void configure(JobConf jConf){
+
+            col = Integer.parseInt(jConf.get("col"));
+        }
+		public void map(LongWritable key, Text value, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
+                String line = value.toString();
+                String[] parts = line.split(",");
+                output.collect(new Text(Integer.toString(col)), new DoubleWritable(Double.parseDouble(parts[col])));
+        }
+}
+```
+
+También he modificado el reducer con el objetivo de obtener la media, el máximo y el mínimo simultáneamente. Dicha ha clase ha quedado de la siguiente manera:
+```
+public class StatReducer extends MapReduceBase implements Reducer<Text, DoubleWritable, Text, DoubleWritable> {
+
+    public void reduce(Text key, Iterator<DoubleWritable> values, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {
+        Double sum = 0.0;
+        Double maxValue = Double.MIN_VALUE;
+        Double minValue = Double.MAX_VALUE;
+        int numValues = 0;
+
+        while (values.hasNext()) {
+            Double v = values.next().get();
+            sum += v;
+            numValues++;
+            maxValue = Math.max(maxValue, v);
+            minValue = Math.min(minValue, v);
+        }
+        output.collect(new Text("Min var " + key + ":"), new DoubleWritable(minValue));
+        output.collect(new Text("Avg var " + key + ":"), new DoubleWritable(sum / numValues));
+        output.collect(new Text("Max var " + key + ":"), new DoubleWritable(maxValue));
+
+    }
+}
+```
+
+Para compilar las clases de esta tarea concreta y ejecutarla hay que ejecutar los siguientes comandos
+```
+cd TA1
+mkdir java_classes jars
+javac -cp /usr/lib/hadoop/*:/usr/lib/hadoop-mapreduce/* -d java_classes Stat*
+jar -cvf jars/Stat.jar -C java_classes / .
+
+# Para lanzar la tarea
+hadoop jar jars/Stat.jar oldapi.Stat /tmp/BDCC/datasets/ECBDL14/ECBDL14_10tst.data <col> ./P4/TA1/output/
+
+# Para comprobar los resultados
+hcat P4/TA1/output/*
+# Salida:
+# Min var 5:	-11.0
+# Avg var 5:	-1.282261707288373
+# Max var 5:	9.0
+```
+
+Para cumplir la tarea adicional 4 utilizaré el cálculo del mínimo de la tarea 1 aplicado a diversos conjuntos de datos con el objetivo de medir los tiempos. Si ejecutamos el programa sobre el conjunto de datos original (`/tmp/BDCC/datasets/ECBDL14/ECBDL14_10tst.data`), que recordemos es un subconjunto con el 10% de las instancias de ECBDL14 (un total de 2.897.917 de instancias) obtenemos los siguientes tiempos:
+- tiempo en map: 10s
+- tiempo en reduce: 8s
+- tiempo total: 18s
+
+Sí ejecutamos el mismo programa sobre el conjunto de datos higgsImb10 (`/user/isaac/datasets/higgsImb10-5-fold/higgsImb10.data`) que cuenta con 527.863 instancias se obtienen los siguientes tiempos:
+- tiempo en map: 6s
+- tiempo en reduce: 8s
+- tiempo total: 14s
+
+Para ejecutar estas pruebas hay que lanzar los siguientes comandos:
+```
+cd T1
+mkdir java_classes jars
+javac -cp /usr/lib/hadoop/*:/usr/lib/hadoop-mapreduce/* -d java_classes Min*
+jar -cvf jars/Min.jar -C java_classes / .
+
+# Para lanzar la tarea con los datos originales
+hadoop jar jars/Min.jar oldapi.Min /tmp/BDCC/datasets/ECBDL14/ECBDL14_10tst.data ./P4/TA2/output1/
+
+# Para lanzar la tarea con el conjunto higgsImb10
+hadoop jar jars/Min.jar oldapi.Min /user/isaac/datasets/higgsImb10-5-fold/higgsImb10.data ./P4/TA2/output2/
+```
+
+Como se puede apreciar analizando los tiempos, a pesar de que el conjunto higgsImb10 es unas 6 veces más pequeño que el ECBDL14 esta diferencia no se refleja en los tiempos, si que son algo menores, pero desde luego no siguen una relación lineal con el tamaño. Esto seguramente se deba a que los tiempos están más relacionados con la distribución de la tarea en maps y reduces, en el caso de ECBDL14 se crean 2 tareas map y 16 reduces mientras que en higgsImb10 se lanzan 3 maps y 16 reduces lo que hace que los tiempos de ejecución sean más similares de lo esperado analizando los datasets.
 
 
 <!-- Salto de página -->
